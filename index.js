@@ -35,6 +35,21 @@ async function run() {
       console.log("load user with id:", product);
       res.json(product);
     });
+    app.get("/orders", async (req, res) => {
+      const cursor = orderCollection.find({});
+      const orders = await cursor.toArray();
+      res.send(orders);
+    });
+    app.get("/orders/:email", async (req, res) => {
+      const query = {
+        accountMail: req.params.email,
+      };
+      console.log(query)
+      const result = await orderCollection.find(query).toArray();
+      console.log(result);
+      res.json(result);
+    });
+
     app.post("/product/addProduct", async (req, res) => {
       const product = req.body;
       console.log("hit the post api", product);
@@ -48,6 +63,36 @@ async function run() {
       console.log("hit the orders");
       const result = await orderCollection.insertOne(order);
       console.log(result);
+      res.json(result);
+    });
+    // Manage Order 
+    
+    app.put("/order/status/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const updateInfo = req.body;
+      console.log(updateInfo);
+      const result = await orderCollection.updateOne(
+        { _id: ObjectId(id) },
+        { $set: { status: updateInfo.status } }
+      );
+      res.send(result);
+    });
+    app.delete("/product/delete/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await cycleCollection.deleteOne(query);
+      console.log(result);
+      console.log(id);
+      res.json(result);
+    });
+    // Delete/cancel order 
+    app.delete("/order/delete/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await orderCollection.deleteOne(query);
+      console.log(result);
+      console.log(id);
       res.json(result);
     });
 
