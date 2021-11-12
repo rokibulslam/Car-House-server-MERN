@@ -21,7 +21,8 @@ async function run() {
     const cycleCollection = database.collection("cycles")
     const orderCollection = database.collection("orders")
     const usersCollection = database.collection("users")
-    
+    const reviewCollection = database.collection("review");
+
     app.get("/product", async (req, res) => {
       const cursor = cycleCollection.find({});
       const cycles = await cursor.toArray();
@@ -131,6 +132,21 @@ async function run() {
       }
       res.json({ admin: isAdmin });
     });
+    // Review Manage 
+    app.get("/reviews", async (req, res) => {
+      const cursor = reviewCollection.find({});
+      const orders = await cursor.toArray();
+      res.send(orders);
+    });
+
+    app.post("/review", async (req, res) => {
+      const order = req.body;
+      console.log("hit the orders");
+      const result = await reviewCollection.insertOne(order);
+      console.log(result);
+      res.json(result);
+    });
+    
   } finally {
     // await client.close()
   }
