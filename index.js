@@ -20,6 +20,7 @@ async function run() {
     const database = client.db("cycleHouse")
     const cycleCollection = database.collection("cycles")
     const orderCollection = database.collection("orders")
+    const usersCollection = database.collection("users")
     
     app.get("/product", async (req, res) => {
       const cursor = cycleCollection.find({});
@@ -69,9 +70,7 @@ async function run() {
     
     app.put("/order/status/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
       const updateInfo = req.body;
-      console.log(updateInfo);
       const result = await orderCollection.updateOne(
         { _id: ObjectId(id) },
         { $set: { status: updateInfo.status } }
@@ -96,6 +95,42 @@ async function run() {
       res.json(result);
     });
 
+    // User 
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      console.log(result);
+      res.json(result);
+    });
+
+    app.put('/users/admin', async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const updateRole = { $set: { role: 'admin' } }
+      const result = await usersCollection.updateOne(filter, updateRole)
+      console.log(result)
+      res.json(result);
+    })
+    app.get("/admins/:role", async (req, res) => {
+      const query = {
+        role: req.params.role,
+      };
+      console.log(query);
+      const result = await usersCollection.find(query).toArray();
+      console.log(result);
+      res.json(result);
+    });
+    // Check role of User 
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      let isAdmin = false;
+      if (user?.role === "admin") {
+        isAdmin = true;
+      }
+      res.json({ admin: isAdmin });
+    });
   } finally {
     // await client.close()
   }
