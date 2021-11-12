@@ -22,7 +22,7 @@ async function run() {
     const orderCollection = database.collection("orders")
     const usersCollection = database.collection("users")
     const reviewCollection = database.collection("review");
-
+    // Manage Product 
     app.get("/product", async (req, res) => {
       const cursor = cycleCollection.find({});
       const cycles = await cursor.toArray();
@@ -37,6 +37,24 @@ async function run() {
       console.log("load user with id:", product);
       res.json(product);
     });
+
+    app.put("/update/:id", async (req, res) => {
+      const id = req.params.id
+      const query = {
+        _id: ObjectId(id),
+      };
+      const updateInfo = req.body
+      const update = { $set:{
+        ProductName: updateInfo.ProductName,
+        price: updateInfo.price,
+        description: updateInfo.description,
+        imgURL: updateInfo.imgURL,
+        brand: updateInfo.brand
+      }}
+      const result = await cycleCollection.updateOne(query, update)
+      res.send(result)
+    });
+    // Manage Order
     app.get("/orders", async (req, res) => {
       const cursor = orderCollection.find({});
       const orders = await cursor.toArray();
@@ -96,14 +114,14 @@ async function run() {
       res.json(result);
     });
 
-    // User 
+    // Users API 
     app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await usersCollection.insertOne(user);
       console.log(result);
       res.json(result);
     });
-
+    // Admin API 
     app.put('/users/admin', async (req, res) => {
       const user = req.body;
       const filter = { email: user.email };
