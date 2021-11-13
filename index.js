@@ -130,6 +130,7 @@ async function run() {
       console.log(result)
       res.json(result);
     })
+    // Get all Admins 
     app.get("/admins/:role", async (req, res) => {
       const query = {
         role: req.params.role,
@@ -147,6 +148,9 @@ async function run() {
       let isAdmin = false;
       if (user?.role === "admin") {
         isAdmin = true;
+      }
+      else {
+        isAdmin = false
       }
       res.json({ admin: isAdmin });
     });
