@@ -17,14 +17,14 @@ async function run() {
   try {
     await client.connect();
     console.log("server connected");
-    const database = client.db("cycleHouse")
-    const cycleCollection = database.collection("cycles")
+    const database = client.db("carHouse")
+    const carCollection = database.collection("cars")
     const orderCollection = database.collection("orders")
     const usersCollection = database.collection("users")
     const reviewCollection = database.collection("review");
     // Manage Product 
     app.get("/product", async (req, res) => {
-      const cursor = cycleCollection.find({});
+      const cursor = carCollection.find({});
       const cycles = await cursor.toArray();
       res.send(cycles);
     });
@@ -33,11 +33,11 @@ async function run() {
       const query = {
         _id: ObjectId(id),
       };
-      const product = await cycleCollection.findOne(query);
+      const product = await carCollection.findOne(query);
       console.log("load user with id:", product);
       res.json(product);
     });
-
+    // Update Product 
     app.put("/update/:id", async (req, res) => {
       const id = req.params.id
       const query = {
@@ -51,9 +51,10 @@ async function run() {
         imgURL: updateInfo.imgURL,
         brand: updateInfo.brand
       }}
-      const result = await cycleCollection.updateOne(query, update)
+      const result = await carCollection.updateOne(query, update)
       res.send(result)
     });
+    
     // Manage Order
     app.get("/orders", async (req, res) => {
       const cursor = orderCollection.find({});
@@ -74,7 +75,7 @@ async function run() {
       const product = req.body;
       console.log("hit the post api", product);
 
-      const result = await cycleCollection.insertOne(product);
+      const result = await carCollection.insertOne(product);
       console.log(result);
       res.json(result);
     });
@@ -99,7 +100,7 @@ async function run() {
     app.delete("/product/delete/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const result = await cycleCollection.deleteOne(query);
+      const result = await carCollection.deleteOne(query);
       console.log(result);
       console.log(id);
       res.json(result);
@@ -152,6 +153,7 @@ async function run() {
       else {
         isAdmin = false
       }
+      console.log(isAdmin)
       res.json({ admin: isAdmin });
     });
     // Review Manage 
