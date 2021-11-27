@@ -1,17 +1,14 @@
-# Welcome To My Car House Demo Site Server
+# Welcome To My Car House Demo Site's SERVER
 
 ### Here is my Server link/API
  [Car House API](https://protected-cliffs-11617.herokuapp.com/).
 
-### I have used modern tool to create this demo projects. Lets Exlpore
+### About CAR HOUSE server.
 
-    * This is a full-stack web development Project
-    * I used Modern React framework for client side
-    * Also used Bootstrap to beautify the site 
     * I have used most popular javascript runtime Node.js as backend language
+    * Used MongoDB database
+    * Used Express.js as a framework of Node.js
     * I used MongoDB for Database
-    * This website's authentication is made by firebase
-    * Deployed server at heroku 
-    * Some API has been created for multi-purpose use
+    * Deployed server side at heroku 
+    * Some REST API has been created for multi-purpose use
 
-## user sign in with password and email has been added. this is a full stack development. I have made some API here using mongoDB and Node.js
